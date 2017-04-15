@@ -1,9 +1,9 @@
-# Calling motorID as variables
-arm = ""
-left_lift = ""
-right_lift = ""
-left_motor = ""
-right_motor = ""
+# Calling motorID as string variables
+arm = "47250366310977878277732"
+left_lift = "47244777713041566566067"
+right_lift = "47245556432598227082168"
+left_motor = "47259833172070488766065"
+right_motor = "47254869497321097390333"
 
 # Motor Speeds
 wheel_speed = 1.0
@@ -22,10 +22,11 @@ async def pick_up():
     Robot.set_value(left_motor, "duty_cycle", -wheel_speed)
     Robot.set_value(right_motor, "duty_cycle", wheel_speed)
     await Actions.sleep(1.0)
-
+    
     # Stop when all autonomous code is done
     Robot.set_value(left_motor, "duty_cycle", 0)
     Robot.set_value(right_motor, "duty_cycle", 0)
+    
 def teleop_setup():
     print("Tele-OP has been started")
 
