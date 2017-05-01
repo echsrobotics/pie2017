@@ -12,114 +12,61 @@ down_speed = 0.5
 arm_speed = 0.3
 
 def autonomous_setup():
-    Robot.run(pick_up1)
+    Robot.run(pick_up)
 
 def autonomous_main():
     pass
 
 async def pick_up():
     #Move forward for 1.1 second out of box
-    Robot.set_value(left_motor, "duty_cycle", wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", -wheel_speed)
-    await Actions.sleep(1.1)
-
+    Robot.run(moveForward, 1.1)
     #Turn right for 90 degree
-    Robot.set_value(left_motor, "duty_cycle", wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", wheel_speed)
-    await Actions.sleep(2.15)
-
+    Robot.run(turnRight, 2.15)
     #Move forward for 1.8 second to the coins
-    Robot.set_value(left_motor, "duty_cycle", wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", -wheel_speed)
-    await Actions.sleep(1.8)
-
+    Robot.run(moveForward, 1.8)
     #Turn left for 180 degree after getting coins
-    Robot.set_value(left_motor, "duty_cycle", -wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", -wheel_speed)
-    await Actions.sleep(4.15)
-
+    Robot.run(turnLeft, 4.15)
     #Move forward for 3.15 second towards the slot
-    Robot.set_value(left_motor, "duty_cycle", wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", -wheel_speed)
-    await Actions.sleep(3.15)
-
+    Robot.run(moveForward, 3.15)
     #Turn left for 90 degree towards the slot
-    Robot.set_value(left_motor, "duty_cycle", -wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", -wheel_speed)
-    await Actions.sleep(1.9)
-
+    Robot.run(turnLeft, 1.9)
     #Move forward for 1.8 second towards the slot
-    Robot.set_value(left_motor, "duty_cycle", wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", -wheel_speed)
-    await Actions.sleep(1.8)
-
+    Robot.run(moveForward, 1.8)
     #Move back for 1.95 second to release the coins
-    Robot.set_value(left_motor, "duty_cycle", -wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", wheel_speed)
-    await Actions.sleep(1.95)
-
+    Robot.run(moveBackward, 1.95)
     #Arm close to shift down
     Robot.set_value(arm, "duty_cycle", -arm_speed)
     await Actions.sleep(0.5)
-
     #Arm open to push coins
     Robot.set_value(arm, "duty_cycle", arm_speed)
     await Actions.sleep(0.2)
-
     #Arm stop after action
     Robot.set_value(arm, "duty_cycle", 0)
-
-    #Move forward for 1.1 second to push the coins in
-    Robot.set_value(left_motor, "duty_cycle", wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", -0.7)
-    await Actions.sleep(2.7)
-
-    #Move back for 1.1 second away from slot
-    Robot.set_value(left_motor, "duty_cycle", -wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", wheel_speed)
-    await Actions.sleep(1.0)
-
-    #Move forward for 1.1 second to push remaining coins in
-    Robot.set_value(left_motor, "duty_cycle", 0.8)
-    Robot.set_value(right_motor, "duty_cycle", -wheel_speed)
-    await Actions.sleep(1.0)
-
+    #Move forward for 2.7 second to push the coins in
+    Robot.run(moveForward, 2.7)
+    #Move back for 1 second away from slot
+    Robot.run(moveBackward, 1.0)
+    #Move forward for 1 second to push remaining coins in
+    Robot.run(moveForward, 1.0)
     #Arm close to get a better angle
     Robot.set_value(arm, "duty_cycle", -0.1)
     await Actions.sleep(1.4)
-
     #Arm stop after closing
     Robot.set_value(arm, "duty_cycle", 0)
-
     #Move back for 2 second away from the slot
-    Robot.set_value(left_motor, "duty_cycle", -wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", wheel_speed)
-    await Actions.sleep(2.0)
-
+    Robot.run(moveBackward, 2.0)
     #Move forward for 2.1 second
-    Robot.set_value(left_motor, "duty_cycle", wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", -0.9)
-    await Actions.sleep(2.1)
-
+    Robot.run(moveForward, 2.1)
     #Arm close to get a better angle
     Robot.set_value(arm, "duty_cycle", -0.1)
     await Actions.sleep(0.5)
-
     #Arm stop after action
     Robot.set_value(arm, "duty_cycle", 0)
-
     #Move back for 2.0 second to get out of starting box
-    Robot.set_value(left_motor, "duty_cycle", -wheel_speed)
-    Robot.set_value(right_motor, "duty_cycle", wheel_speed)
-    await Actions.sleep(2.0)
-
+    Robot.run(moveBackward, 2.0)
     #Stop when all autonomous code is done
-    Robot.set_value(left_motor, "duty_cycle", 0)
-    Robot.set_value(right_motor, "duty_cycle", 0)
+    Robot.run(stop)
 
-
-async def pick_up1():
-    Robot.run(moveBackward, 30)
 
 def teleop_setup():
     print("Tele-OP has been started")
@@ -148,35 +95,27 @@ def teleop_main():
     else:
         Robot.set_value(arm, "duty_cycle", 0)
 
-
+# Basic movement code for autonomous
 async def turnLeft(t):
     Robot.set_value(left_motor, "duty_cycle", -wheel_speed)
     Robot.set_value(right_motor, "duty_cycle", -wheel_speed)
     await Actions.sleep(t)
-
-    Robot.set_value(left_motor, "duty_cycle", 0)
-    Robot.set_value(right_motor, "duty_cycle", 0)
 
 async def turnRight(t):
     Robot.set_value(left_motor, "duty_cycle", wheel_speed)
     Robot.set_value(right_motor, "duty_cycle", wheel_speed)
     await Actions.sleep(t)
 
-    Robot.set_value(left_motor, "duty_cycle", 0)
-    Robot.set_value(right_motor, "duty_cycle", 0)
-
 async def moveForward(t):
     Robot.set_value(left_motor, "duty_cycle", wheel_speed)
     Robot.set_value(right_motor, "duty_cycle", -wheel_speed)
     await Actions.sleep(t)
-
-    Robot.set_value(left_motor, "duty_cycle", 0)
-    Robot.set_value(right_motor, "duty_cycle", 0)
 
 async def moveBackward(t):
     Robot.set_value(left_motor, "duty_cycle", -wheel_speed)
     Robot.set_value(right_motor, "duty_cycle", wheel_speed)
     await Actions.sleep(t)
 
+async def stop():
     Robot.set_value(left_motor, "duty_cycle", 0)
     Robot.set_value(right_motor, "duty_cycle", 0)
